@@ -34,8 +34,7 @@ Choose one track and build something that matters:
 
 ### 📖 Participant Guide
 
-Full participant guide, submission instructions, judging criteria, and logistics:
-👉 **[Participant Guide](https://caredevi-events.slack.com/files/U0AR8EX5X2Q/F0AUP8U21N3/particpant-guide.pdf)**
+Full participant guide, submission instructions, judging criteria, and logistics can be found in the CareDevi Events #announcements slack channel.
 
 ### 💬 Slack Channels
 
