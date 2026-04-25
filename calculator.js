@@ -45,11 +45,8 @@ if (!data) {
   fat = Math.round((calories * 0.25) / 9);
   carbs = Math.round((calories - (protein * 4 + fat * 9)) / 4);
 
-  // Water goal: simple estimate 35 ml per kg
-  waterLiters = (weight * 35) / 1000;
-  waterLiters = waterLiters.toFixed(1);
+  waterLiters = ((weight * 35) / 1000).toFixed(1);
 
-  // Health score logic
   if (calories < 1400) score -= 25;
   if (calories > 2800) score -= 15;
   if (protein < weight * 1.2) score -= 25;
@@ -57,7 +54,7 @@ if (!data) {
   if (carbs < 100) score -= 10;
   if (score < 0) score = 0;
 
-  let scoreMessage =
+  const scoreMessage =
     score >= 85
       ? "Strong balance"
       : score >= 65
@@ -112,7 +109,7 @@ if (!data) {
           <h3>🍚 Carbs: ${carbs}g</h3>
           <p>
             Carbs are your main energy source.
-            Good sources: rice, roti, chiura, oats, potatoes, fruits, dal bhat plate.
+            Good sources: rice, roti, chiura, oats, potatoes, fruits, and grain-based meals.
           </p>
         </div>
 
@@ -120,7 +117,7 @@ if (!data) {
           <h3>🥑 Fats: ${fat}g</h3>
           <p>
             Fats support hormones, brain health, and long-lasting energy.
-            Good sources: nuts, peanuts, avocado, seeds, eggs, milk, and healthy oils.
+            Good sources: nuts, peanuts, seeds, eggs, milk, avocado, and healthy oils.
           </p>
         </div>
       </div>
@@ -132,7 +129,7 @@ if (!data) {
     </div>
 
     <div class="explain-box">
-      <h3>🧠 Why this plan?</h3>
+      <h3>🧠 Decision Explanation</h3>
       <p>${goalMessage}</p>
       <p>
         FuelMate estimates your needs using your age, height, weight, activity level,
@@ -142,18 +139,18 @@ if (!data) {
     </div>
 
     <div class="culture-box">
-      <h3>🍛 Nepali Food Intelligence</h3>
+      <h3>🌍 Culturally Adaptive Nutrition</h3>
       <p>
-        FuelMate does not treat Nepali food as “good” or “bad.” Instead, it helps you
-        balance familiar meals.
+        FuelMate adapts to different dietary styles instead of forcing a single “perfect” diet.
+        It supports South Asian, East Asian, African-inspired, and Western meal patterns.
       </p>
       <p>
-        <strong>Dal Bhat plate</strong> = rice + lentil soup + vegetables + optional protein
-        like egg, chicken, fish, paneer, or yogurt.
+        The goal is to make nutrition guidance realistic, familiar, and easier to follow
+        across different communities.
       </p>
       <p>
-        A smarter plate is: enough rice for energy, more dal for protein, vegetables for fiber,
-        and one protein add-on when possible.
+        <strong>Key idea:</strong> Better nutrition is not about changing your culture,
+        but improving balance within it.
       </p>
     </div>
 
@@ -232,19 +229,19 @@ function mealReminder() {
     box.innerHTML = `
       <strong>Current time: ${currentTime}</strong><br>
       🍛 Lunch window: 12:00 PM – 2:30 PM<br>
-      Try: Dal Bhat plate with vegetables and egg/chicken/paneer.
+      Try a balanced plate with carbs, protein, and vegetables.
     `;
   } else if (hour >= 18 && hour < 21) {
     box.innerHTML = `
       <strong>Current time: ${currentTime}</strong><br>
       🌙 Dinner window: 6:00 PM – 9:00 PM<br>
-      Try: light Dal Bhat, momo soup + vegetables, or rice + dal + greens.
+      Choose a filling but not-too-heavy dinner with protein and vegetables.
     `;
   } else {
     box.innerHTML = `
       <strong>Current time: ${currentTime}</strong><br>
       🍌 Snack window<br>
-      Try: fruit, yogurt, peanuts, roasted chana, or chiura + curd.
+      Try fruit, yogurt, peanuts, roasted chana, or a light balanced snack.
     `;
   }
 }
