@@ -6,6 +6,7 @@ let protein = 0;
 let carbs = 0;
 let fat = 0;
 let score = 100;
+let waterLiters = 0;
 
 if (!data) {
   results.innerHTML = `
@@ -29,19 +30,26 @@ if (!data) {
 
   if (data.goal === "lose") {
     calories -= 300;
-    goalMessage = "Your goal is weight loss, so FuelMate creates a small calorie deficit.";
+    goalMessage =
+      "Because your goal is weight loss, FuelMate creates a small calorie deficit. This means you still get energy for the day, but slightly less than your body burns, which can support gradual progress.";
   } else if (data.goal === "gain") {
     calories += 300;
-    goalMessage = "Your goal is muscle gain, so FuelMate adds extra calories for recovery and growth.";
+    goalMessage =
+      "Because your goal is muscle gain, FuelMate adds extra calories. Your body needs extra fuel to recover, build muscle, and avoid feeling weak after activity.";
   } else {
-    goalMessage = "Your goal is maintenance, so FuelMate keeps your calories near your daily needs.";
+    goalMessage =
+      "Because your goal is maintenance, FuelMate keeps your calories close to your daily energy needs. This helps you stay steady without intentionally gaining or losing weight.";
   }
 
   protein = Math.round(weight * 1.8);
   fat = Math.round((calories * 0.25) / 9);
   carbs = Math.round((calories - (protein * 4 + fat * 9)) / 4);
 
-  // HEALTH SCORE
+  // Water goal: simple estimate 35 ml per kg
+  waterLiters = (weight * 35) / 1000;
+  waterLiters = waterLiters.toFixed(1);
+
+  // Health score logic
   if (calories < 1400) score -= 25;
   if (calories > 2800) score -= 15;
   if (protein < weight * 1.2) score -= 25;
@@ -56,36 +64,66 @@ if (!data) {
       ? "Good start, but can improve"
       : "Needs attention";
 
-  // RISK INSIGHT
   let riskText = "";
 
   if (calories < 1400) {
-    riskText += "⚠️ Your calorie target is very low, which may cause tiredness, dizziness, or low focus.<br>";
+    riskText += "⚠️ Your calorie target is very low. This may lead to low energy, tiredness, or difficulty focusing.<br>";
   }
 
   if (protein < weight * 1.2) {
-    riskText += "⚠️ Your protein may be low, which can affect muscle recovery and fullness.<br>";
+    riskText += "⚠️ Your protein may be low. Low protein can make recovery harder and may leave you hungry sooner.<br>";
   }
 
   if (calories > 2800) {
-    riskText += "⚠️ Your calorie target is high, so portion control and activity are important.<br>";
+    riskText += "⚠️ Your calorie target is high. This can be okay for active people, but portion control and movement matter.<br>";
   }
 
   if (riskText === "") {
-    riskText = "✅ No major risk detected from this basic nutrition estimate.";
+    riskText = "✅ No major risk detected from this basic estimate. Your plan looks reasonable based on your inputs.";
   }
 
   results.innerHTML = `
     <div class="score-box">
       <h2>⭐ Health Score: ${score}/100</h2>
       <p>${scoreMessage}</p>
+      <p>
+        This score is a simple readiness check based on calories, protein, carbs, and fats.
+        It helps you quickly understand whether your plan looks balanced.
+      </p>
     </div>
 
     <div class="result-box">
       <h2>🔥 ${calories} Calories/day</h2>
-      <p>💪 <strong>Protein:</strong> ${protein}g</p>
-      <p>🍚 <strong>Carbs:</strong> ${carbs}g</p>
-      <p>🥑 <strong>Fat:</strong> ${fat}g</p>
+      <p>
+        Calories are your body’s daily fuel. You need them for walking, studying,
+        working, exercising, and even basic body functions like breathing and thinking.
+      </p>
+
+      <div class="macro-education">
+        <div>
+          <h3>💪 Protein: ${protein}g</h3>
+          <p>
+            Protein helps repair muscles and keeps you full.
+            Good sources: dal, eggs, chicken, fish, yogurt, paneer, chickpeas, lentils.
+          </p>
+        </div>
+
+        <div>
+          <h3>🍚 Carbs: ${carbs}g</h3>
+          <p>
+            Carbs are your main energy source.
+            Good sources: rice, roti, chiura, oats, potatoes, fruits, dal bhat plate.
+          </p>
+        </div>
+
+        <div>
+          <h3>🥑 Fats: ${fat}g</h3>
+          <p>
+            Fats support hormones, brain health, and long-lasting energy.
+            Good sources: nuts, peanuts, avocado, seeds, eggs, milk, and healthy oils.
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="risk-box">
@@ -97,8 +135,25 @@ if (!data) {
       <h3>🧠 Why this plan?</h3>
       <p>${goalMessage}</p>
       <p>
-        FuelMate uses your age, height, weight, activity level, and goal to estimate your daily needs.
-        Calories fuel your body, protein helps recovery, carbs give energy, and fats support brain and hormone health.
+        FuelMate estimates your needs using your age, height, weight, activity level,
+        and goal. Instead of only showing numbers, it explains what those numbers mean
+        and connects them to real food choices.
+      </p>
+    </div>
+
+    <div class="culture-box">
+      <h3>🍛 Nepali Food Intelligence</h3>
+      <p>
+        FuelMate does not treat Nepali food as “good” or “bad.” Instead, it helps you
+        balance familiar meals.
+      </p>
+      <p>
+        <strong>Dal Bhat plate</strong> = rice + lentil soup + vegetables + optional protein
+        like egg, chicken, fish, paneer, or yogurt.
+      </p>
+      <p>
+        A smarter plate is: enough rice for energy, more dal for protein, vegetables for fiber,
+        and one protein add-on when possible.
       </p>
     </div>
 
@@ -108,6 +163,7 @@ if (!data) {
   `;
 
   createChart();
+  waterReminder();
 }
 
 function createChart() {
@@ -135,60 +191,96 @@ function createChart() {
   });
 }
 
+function waterReminder() {
+  const box = document.getElementById("waterGoal");
+  const hour = new Date().getHours();
+
+  if (!box) return;
+
+  let reminder = "";
+
+  if (hour < 12) {
+    reminder = "Try to finish about 40% of your water goal before lunch.";
+  } else if (hour < 18) {
+    reminder = "Try to reach about 70% of your water goal by evening.";
+  } else {
+    reminder = "Finish your remaining water slowly, but avoid drinking too much right before sleep.";
+  }
+
+  box.innerHTML = `
+    Your estimated water goal is <strong>${waterLiters} liters/day</strong>.<br>
+    ${reminder}
+  `;
+}
+
 function mealReminder() {
   const hour = new Date().getHours();
+  const minute = new Date().getMinutes();
   const box = document.getElementById("mealReminder");
 
   if (!box) return;
 
-  if (hour >= 6 && hour < 10) {
-    box.innerHTML = "🌅 Breakfast time: try sel roti + boiled egg, chiya + roasted chana, or oats + banana.";
-  } else if (hour >= 11 && hour < 15) {
-    box.innerHTML = "🍛 Lunch time: dal bhat with vegetables, achar, and egg/chicken is a strong choice.";
-  } else if (hour >= 17 && hour < 21) {
-    box.innerHTML = "🌙 Dinner time: try dal bhat, momo soup, or rice + dal + greens.";
+  const currentTime = `${hour % 12 || 12}:${minute.toString().padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`;
+
+  if (hour >= 7 && hour < 10) {
+    box.innerHTML = `
+      <strong>Current time: ${currentTime}</strong><br>
+      🌅 Breakfast window: 7:00 AM – 10:00 AM<br>
+      Try: sel roti + boiled egg, chiya + roasted chana, or curd + chiura + banana.
+    `;
+  } else if (hour >= 12 && hour < 15) {
+    box.innerHTML = `
+      <strong>Current time: ${currentTime}</strong><br>
+      🍛 Lunch window: 12:00 PM – 2:30 PM<br>
+      Try: Dal Bhat plate with vegetables and egg/chicken/paneer.
+    `;
+  } else if (hour >= 18 && hour < 21) {
+    box.innerHTML = `
+      <strong>Current time: ${currentTime}</strong><br>
+      🌙 Dinner window: 6:00 PM – 9:00 PM<br>
+      Try: light Dal Bhat, momo soup + vegetables, or rice + dal + greens.
+    `;
   } else {
-    box.innerHTML = "🍌 Snack time: try peanuts, yogurt, fruit, or roasted chana.";
+    box.innerHTML = `
+      <strong>Current time: ${currentTime}</strong><br>
+      🍌 Snack window<br>
+      Try: fruit, yogurt, peanuts, roasted chana, or chiura + curd.
+    `;
   }
 }
 
-function eatNow(type) {
-  const box = document.getElementById("eatSuggestion");
+function sleepReminder() {
+  const hour = new Date().getHours();
+  const minute = new Date().getMinutes();
+  const box = document.getElementById("sleepReminder");
 
   if (!box) return;
 
-  if (type === "hungry") {
-    box.innerHTML = `
-      <h3>🍛 Balanced Nepali Meals</h3>
-      <ul>
-        <li>Dal bhat + tarkari + boiled egg</li>
-        <li>Rice + dal + spinach + chicken</li>
-        <li>Dhido + gundruk soup + egg</li>
-      </ul>
-    `;
-  }
+  const currentTime = `${hour % 12 || 12}:${minute.toString().padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`;
 
-  if (type === "workout") {
+  if (hour >= 21 || hour < 5) {
     box.innerHTML = `
-      <h3>💪 After Workout Meals</h3>
-      <ul>
-        <li>Banana + milk + boiled eggs</li>
-        <li>Rice + chicken curry + vegetables</li>
-        <li>Dal bhat + extra lentils + egg</li>
-        <li>Curd + beaten rice + banana</li>
-      </ul>
+      <strong>Current time: ${currentTime}</strong><br>
+      🌙 Sleep window: 10:00 PM – 6:00 AM<br>
+      Reduce screen time, avoid heavy meals, and prepare for rest.
     `;
-  }
-
-  if (type === "energy") {
+  } else if (hour >= 5 && hour < 8) {
     box.innerHTML = `
-      <h3>⚡ Low Energy Options</h3>
-      <ul>
-        <li>Chiya + roasted chana</li>
-        <li>Curd + chiura + banana</li>
-        <li>Sel roti + boiled egg</li>
-        <li>Fruit + peanuts</li>
-      </ul>
+      <strong>Current time: ${currentTime}</strong><br>
+      🌅 Wake-up window: 6:00 AM – 8:00 AM<br>
+      Drink water, move lightly, and eat breakfast within a few hours.
+    `;
+  } else if (hour >= 15 && hour < 18) {
+    box.innerHTML = `
+      <strong>Current time: ${currentTime}</strong><br>
+      ☕ Afternoon reminder<br>
+      Avoid too much caffeine now so your sleep is not disturbed later.
+    `;
+  } else {
+    box.innerHTML = `
+      <strong>Current time: ${currentTime}</strong><br>
+      ✅ Sleep tip<br>
+      Keep a consistent bedtime and avoid very heavy meals close to sleep.
     `;
   }
 }
@@ -198,3 +290,8 @@ function goBack() {
 }
 
 mealReminder();
+sleepReminder();
+
+setInterval(mealReminder, 60000);
+setInterval(sleepReminder, 60000);
+setInterval(waterReminder, 60000);
