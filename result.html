@@ -2,38 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Result</title>
+  <title>Your FuelMate Dashboard</title>
   <link rel="stylesheet" href="css/style.css">
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div class="home">
-
   <div class="card result-card">
 
-    <h1>Your Plan</h1>
+    <p class="badge">📊 Your Wellness Dashboard</p>
+    <h1>Your FuelMate Plan</h1>
+
+    <p>
+      FuelMate explains your nutrition numbers in a simple way and gives practical food, water, meal timing, and sleep guidance.
+    </p>
 
     <div id="results"></div>
 
     <canvas id="macroChart"></canvas>
 
-    <h2>⏰ Meal Reminder</h2>
-    <p id="mealReminder"></p>
+    <div class="water-box">
+      <h3>💧 Water Goal</h3>
+      <p id="waterGoal"></p>
+    </div>
 
-    <h2>🍽 What should I eat?</h2>
+    <div class="explain-box">
+      <h3>⏰ Smart Meal Timing</h3>
+      <p id="mealReminder"></p>
 
-    <button onclick="eatNow('hungry')">Hungry</button>
-    <button onclick="eatNow('workout')">Workout</button>
-    <button onclick="eatNow('energy')">Low Energy</button>
+      <p>
+        <strong>Suggested meal windows:</strong><br>
+        🌅 Breakfast: 7:00 – 10:00 AM<br>
+        🍛 Lunch: 12:00 – 2:30 PM<br>
+        🌙 Dinner: 6:00 – 9:00 PM
+      </p>
+    </div>
 
-    <div id="eatSuggestion"></div>
+    <div class="sleep-box">
+      <h3>😴 Sleep Guidance</h3>
+      <p id="sleepReminder"></p>
 
-    <button onclick="goBack()">Back</button>
+      <p>
+        <strong>Suggested sleep goal:</strong><br>
+        🛌 Sleep: 10:00 PM – 6:00 AM<br>
+        ⏰ Aim for 7–8 hours daily
+      </p>
+    </div>
+
+    <button onclick="window.location.href='food.html'">
+      What Should I Eat?
+    </button>
+
+    <button class="back-btn" onclick="goBack()">
+      Start Over
+    </button>
 
   </div>
-
 </div>
 
 <script src="js/calculator.js"></script>
